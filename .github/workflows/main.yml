@@ -20,7 +20,8 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
-
+      
+      #test
       - name: Deploy code via SSH
         uses: appleboy/ssh-action@master
         with:
