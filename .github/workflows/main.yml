@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/vaibhav/WorkPlace/DjangoTest
+            cd /home/vaibhav/test
             git pull origin master
             pip install -r requirements.txt
             python manage.py migrate
