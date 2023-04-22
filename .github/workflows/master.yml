@@ -27,41 +27,7 @@
 
 
 
-# name: Deploy to Staging Server
-
-# on:
-#   push:
-#     branches:
-#       - master
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - name: Checkout code
-#       uses: actions/checkout@v2
-
-#     - name: Deploy to Staging Server
-#       uses: easingthemes/ssh-deploy@main
-#       env:
-#         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-#         ARGS: "-rlgoDzvc -i"
-#         REMOTE_HOST: ${{ secrets.SSH_HOST }}
-#         REMOTE_USER: ${{ secrets.SSH_USERNAME }}
-# #         TARGET: ${{ secrets.REMOTE_TARGET }}
-#         SCRIPT_BEFORE: |
-#           whoami
-#           ls -al
-#         SCRIPT_AFTER: |
-#           whoami
-#           ls -al
-#           echo $RSYNC_STDOUT
-          
-#     - name: Print whoami 
-#       run: echo $whoami && ls -a
-      
-        
-name: Deploy Dockerfile to server
+name: Deploy to Staging Server
 
 on:
   push:
@@ -72,23 +38,58 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        
-      - name: Deploy Dockerfile
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: "-rlgoDzvc -i"
-#           SOURCE: "Dockerfile"
-          REMOTE_HOST: ${{ secrets.SSH_HOST }}
-          REMOTE_PORT: 22
-          REMOTE_USER: ${{ secrets.SSH_USERNAME }}
-#           TARGET: "/home/ubuntu/test/"
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Copy files to remote server
-        run: |
-          rsync -avz --delete Dockerfile ubuntu@172.31.20.230:/home/ubuntu/test/
+    - name: Deploy to Staging Server
+      uses: easingthemes/ssh-deploy@main
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-rlgoDzvc -i"
+        REMOTE_HOST: ${{ secrets.SSH_HOST }}
+        REMOTE_USER: ${{ secrets.SSH_USERNAME }}
+        REMOTE_PORT: 22
+        TARGET: "/home/ubuntu/test/"
+        SCRIPT_BEFORE: |
+          whoami
+          ls -al
+        SCRIPT_AFTER: |
+          whoami
+          ls -al
+          echo $RSYNC_STDOUT
+          
+    - name: Print whoami 
+      run: echo $whoami && ls -a
+      
+        
+# name: Deploy Dockerfile to server
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+        
+#       - name: Deploy Dockerfile
+#         uses: easingthemes/ssh-deploy@main
+#         env:
+#           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+#           ARGS: "-rlgoDzvc -i"
+# #           SOURCE: "Dockerfile"
+#           REMOTE_HOST: ${{ secrets.SSH_HOST }}
+#           REMOTE_PORT: 22
+#           REMOTE_USER: ${{ secrets.SSH_USERNAME }}
+# #           TARGET: "/home/ubuntu/test/"
+
+#       - name: Copy files to remote server
+#         run: |
+#           rsync -avz --delete Dockerfile <host>:/home/ubuntu/test/
           
 
 
