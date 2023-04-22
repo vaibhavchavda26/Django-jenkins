@@ -25,7 +25,43 @@
 #       run: |
 #         ssh vaibhav@192.168.1.20 "cd /home/vaibhav/test && git pull origin master && pip install -r requirements.txt && python manage.py migrate && sudo systemctl restart gunicorn"
 
-name: Deploy to Staging Server
+
+
+# name: Deploy to Staging Server
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v2
+
+#     - name: Deploy to Staging Server
+#       uses: easingthemes/ssh-deploy@main
+#       env:
+#         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+#         ARGS: "-rlgoDzvc -i"
+#         REMOTE_HOST: ${{ secrets.SSH_HOST }}
+#         REMOTE_USER: ${{ secrets.SSH_USERNAME }}
+# #         TARGET: ${{ secrets.REMOTE_TARGET }}
+#         SCRIPT_BEFORE: |
+#           whoami
+#           ls -al
+#         SCRIPT_AFTER: |
+#           whoami
+#           ls -al
+#           echo $RSYNC_STDOUT
+          
+#     - name: Print whoami 
+#       run: echo $whoami && ls -a
+      
+        
+name: Deploy Dockerfile to server
 
 on:
   push:
@@ -36,26 +72,15 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Deploy to Staging Server
-      uses: easingthemes/ssh-deploy@main
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-rlgoDzvc -i"
-        REMOTE_HOST: ${{ secrets.SSH_HOST }}
-        REMOTE_USER: ${{ secrets.SSH_USERNAME }}
-#         TARGET: ${{ secrets.REMOTE_TARGET }}
-        SCRIPT_BEFORE: |
-          whoami
-          ls -al
-        SCRIPT_AFTER: |
-          whoami
-          ls -al
-          echo $RSYNC_STDOUT
-          
-    - name: Print whoami 
-      run: echo $whoami && ls -a
-      
-        
+      - name: Deploy Dockerfile
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-rlgoDzvc -i"
+          SOURCE: "Dockerfile"
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER: ${{ secrets.SSH_USERNAME }}
+          TARGET: "/home/ubuntu/test/"
