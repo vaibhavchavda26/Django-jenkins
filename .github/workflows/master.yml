@@ -1,4 +1,31 @@
-name: Deploy Django Project
+# name: Deploy Django Project
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v2
+
+#     - name: Install dependencies
+#       run: pip install -r requirements.txt
+
+#     - name: Set up SSH
+#       uses: webfactory/ssh-agent@v0.5.0
+#       with:
+#         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+#     - name: Deploy code
+#       run: |
+#         ssh vaibhav@192.168.1.20 "cd /home/vaibhav/test && git pull origin master && pip install -r requirements.txt && python manage.py migrate && sudo systemctl restart gunicorn"
+
+name: Deploy to Staging Server
 
 on:
   push:
@@ -8,19 +35,22 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt
-
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.5.0
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-    - name: Deploy code
-      run: |
-        ssh vaibhav@192.168.1.20 "cd /home/vaibhav/test && git pull origin master && pip install -r requirements.txt && python manage.py migrate && sudo systemctl restart gunicorn"
+    - name: Deploy to Staging Server
+      uses: easingthemes/ssh-deploy@main
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-rlgoDzvc -i"
+#         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+#         REMOTE_USER: ${{ secrets.REMOTE_USER }}
+#         TARGET: ${{ secrets.REMOTE_TARGET }}
+        SCRIPT_BEFORE: |
+          whoami
+          ls -al
+        SCRIPT_AFTER: |
+          whoami
+          ls -al
+          echo $RSYNC_STDOUT
