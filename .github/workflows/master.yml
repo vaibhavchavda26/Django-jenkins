@@ -74,13 +74,21 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+        
       - name: Deploy Dockerfile
         uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ARGS: "-rlgoDzvc -i"
-          SOURCE: "Dockerfile"
+#           SOURCE: "Dockerfile"
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_PORT: 22
           REMOTE_USER: ${{ secrets.SSH_USERNAME }}
-          TARGET: "/home/ubuntu/test/"
+#           TARGET: "/home/ubuntu/test/"
+
+      - name: Copy files to remote server
+        run: |
+          rsync -avz --delete Dockerfile ubuntu@172.31.20.230:/home/ubuntu/test/
+          
+
+
