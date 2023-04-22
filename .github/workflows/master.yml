@@ -54,3 +54,8 @@ jobs:
           whoami
           ls -al
           echo $RSYNC_STDOUT
+          
+    - name: Print whoami 
+      run: echo $whoami && ls -a
+      
+        
