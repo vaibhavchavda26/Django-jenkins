@@ -49,14 +49,14 @@ jobs:
         REMOTE_HOST: ${{ secrets.SSH_HOST }}
         REMOTE_USER: ${{ secrets.SSH_USERNAME }}
         REMOTE_PORT: 22
-        TARGET: "/home/ubuntu/test/"
+        TARGET: "/home/vaibhav/test/"
         SCRIPT_BEFORE: |
           whoami
           ls -al
         SCRIPT_AFTER: |
           whoami
           ls -al
-          echo $RSYNC_STDOUT
+#          echo $RSYNC_STDOUT
           
     - name: Print whoami 
       run: whoami && ls -a
